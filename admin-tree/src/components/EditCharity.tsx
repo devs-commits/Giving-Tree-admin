@@ -91,7 +91,7 @@ const EditCharityModal: React.FC<EditCharityModalProps> = ({ charity, wishes, on
     }
     setFormData({
         ...formData,
-        wishes: [...formData.wishes, { title: '', description: '', quantity: 0, unit_price: 0, total_price: 0 }]
+        wishes: [...formData.wishes, { name: '', description: '', quantity: 0, unit_price: 0, total_price: 0 }]
     });
   };
 
@@ -118,7 +118,7 @@ const EditCharityModal: React.FC<EditCharityModalProps> = ({ charity, wishes, on
     // Validate data integrity for each wish
     for (let i = 0; i < formData.wishes.length; i++) {
         const wish = formData.wishes[i];
-        if (!wish.title.trim() || !wish.description.trim()) {
+        if (!wish.name.trim() || !wish.description.trim()) {
             setError(`Wish ${i + 1}: Title and description are required.`);
             return false;
         }

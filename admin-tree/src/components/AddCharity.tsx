@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { Plus, Trash2, Loader2, AlertTriangle } from 'lucide-react';
 import type { Wish } from './WishTable';
 
+
+type WishInput = Omit<Wish, 'id' | 'charity_name' | 'fulfilled' | 'current_price'>;
+
 export interface CharityForm {
   name: string;
   description: string;
   website: string;
   logo_url: string;
   image_url: string;
-  wishes: Wish[];
+  wishes: WishInput[];
 }
 
 interface AddCharityFormProps {
