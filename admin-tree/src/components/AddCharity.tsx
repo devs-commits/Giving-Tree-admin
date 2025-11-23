@@ -65,7 +65,7 @@ const AddCharityForm: React.FC<AddCharityFormProps> = ({ onSubmit }) => {
  
   const handleWishChange = (index: number, field: keyof WishItem, value: string | number) => {
     const updatedWishes = [...formData.wishes];
-    const rawValue = typeof value === 'string' ? value.trim() : value;
+    const rawValue = typeof value === 'string' ? value : value;
     let numericValue: number;
 
     if (field === 'quantity') {
