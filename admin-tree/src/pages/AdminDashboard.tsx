@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Heart, BarChart3, TrendingUp, LogOut } from "lucide-react";
+import { Heart, BarChart3, TrendingUp, LogOut, Loader2, AlertTriangle } from "lucide-react";
 import StatCard from "../components/StatCard";
 import TabButton from "../components/TabButton";
 import CharitiesTable from "../components/CharityTable";
@@ -44,6 +44,7 @@ const AdminDashboard: React.FC = () => {
   const [togglingId, setTogglingId] = useState<number | null>(null); // To disable a specific button
 
   useEffect(() => {
+    setIsLoading(true);
     // Fetch charities from backend API
     const fetchCharities = async () => {
       try {
@@ -77,6 +78,9 @@ const AdminDashboard: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching wishes:', error);
+        setError('Error fetching wishes');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -228,6 +232,16 @@ const AdminDashboard: React.FC = () => {
     alert("Logged out successfully!");
   };
 
+  if (isLoading) {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <h2 className="text-xl text-gray-700 flex items-center gap-2">
+                <Loader2 className="w-5 h-5 animate-spin"/> Loading Dashboard Data...
+            </h2>
+        </div>
+    );
+  }
+
   return (
     <div className="min-h-screen p-8" style={{ backgroundColor: "#F5F5F5" }}>
       <div className="max-w-7xl mx-auto">
@@ -265,6 +279,14 @@ const AdminDashboard: React.FC = () => {
             value={`₦${totalDonations.toLocaleString()}`}
           />
         </div>
+
+        {/* Display Global Error */}
+        {error && (
+            <div className="p-4 mb-6 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center">
+                <AlertTriangle className="w-5 h-5 mr-3"/>
+                <p className="font-medium">Critical Error: {error}</p>
+            </div>
+        )}
 
         {/* Tabbed Content */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100">

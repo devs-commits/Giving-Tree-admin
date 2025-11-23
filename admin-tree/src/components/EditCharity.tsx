@@ -53,36 +53,35 @@ const EditCharityModal: React.FC<EditCharityModalProps> = ({ charity, wishes, on
   const handleWishChange = (index: number, field: keyof Wish | 'name' | 'description', value: string | number) => {
     const updatedWishes = [...formData.wishes];
     
-    // 1. Process the incoming value: Convert string to number, or use the value directly.
+    // 1. Process the incoming value: Use the raw value for strings (NO TRIM).
     let processedValue: string | number = value;
 
     if (typeof value === 'string' && ['quantity', 'unit_price'].includes(field as string)) {
-        // If the string is empty (e.g., user cleared the input), treat it as 0, otherwise convert to number
-        processedValue = value === '' ? 0 : Number(value);
+        // Numeric logic (handles empty string and NaN conversion)
+        if (value === '') {
+            processedValue = 0;
+        } else {
+            const num = Number(value);
+            // If conversion results in NaN, we stop the update for stability
+            if (isNaN(num)) return; 
+            processedValue = num;
+        }
     }
     
-    // Update the field with the processed value (which might be the source of the NaN if not validated)
+    // 2. Update the state item
     updatedWishes[index] = { ...updatedWishes[index], [field]: processedValue };
     
-    // Auto-calculate total_price
+    // Auto-calculate total_price (rest of logic remains the same)
     if (field === 'quantity' || field === 'unit_price') {
-      
-      // 2. RETRIEVAL & VALIDATION: Get the values from the updated array. 
-      //    Use isNaN() check to aggressively ensure the value is a valid number, defaulting to 0 otherwise.
-      const rawQuantity = updatedWishes[index].quantity;
-      const rawUnitPrice = updatedWishes[index].unit_price;
-      
-      const quantity = isNaN(rawQuantity) ? 0 : rawQuantity;
-      const unitPrice = isNaN(rawUnitPrice) ? 0 : rawUnitPrice;
-      
-      // 3. Calculation
-      const total = quantity * unitPrice;
-      updatedWishes[index].total_price = Number(total.toFixed(2));
+        const quantity = updatedWishes[index].quantity || 0;
+        const unitPrice = updatedWishes[index].unit_price || 0;
+        const total = quantity * unitPrice;
+        updatedWishes[index].total_price = Number(total.toFixed(2));
     }
     
     setFormData({ ...formData, wishes: updatedWishes });
   };
-
+  
   const addWishItem = () => {
     setError(null); // Clear previous errors
     if (formData.wishes.length >= MAX_WISHES) {
