@@ -275,27 +275,18 @@ const AddCharityForm: React.FC<AddCharityFormProps> = ({ onSubmit }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Logo URL</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
           <input
-            type="url"
-            required
-            value={formData.logo_url}
-            onChange={(e) => handleInputChange('logo_url', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="https://example.com/logo.png"
-            disabled={isSubmitting}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-          <input
-            type="url"
-            required
-            value={formData.image_url}
-            onChange={(e) => handleInputChange('image_url', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="https://example.com/image.jpg"
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                handleInputChange('image_url', imageUrl);
+              }
+            }}
+            className="w-full"
             disabled={isSubmitting}
           />
         </div>
