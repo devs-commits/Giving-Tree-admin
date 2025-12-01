@@ -45,3 +45,18 @@ class Wishes(db.Model):
 
     def __repr__(self):
         return f'<Wishes {self.name} for Charity ID {self.charity_id}>'
+    
+class Payments(db.Model):
+    __tablename__ = 'payments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    wish_id = db.Column(db.Integer, db.ForeignKey('wishes.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    payment_date = db.Column(db.DateTime, server_default=db.func.now())
+    donor_name = db.Column(db.String(150), nullable=True)
+    donor_email = db.Column(db.String(150), nullable=True)
+
+    wish = db.relationship('Wishes', backref=db.backref('payments', lazy=True))
+
+    def __repr__(self):
+        return f'<Payments {self.id} for Wish ID {self.wish_id}>'
