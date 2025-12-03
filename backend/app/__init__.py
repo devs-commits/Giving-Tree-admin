@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from .config import config
 from .extensions import db, jwt, migrate, CORS, bcrypt
 
-def create_app(config_name):
+def create_app(config_name='production'):
     """Factory function to create the application instance."""
     app = Flask(__name__)
     
